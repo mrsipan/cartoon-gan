@@ -2,9 +2,19 @@ from PIL import Image
 import argparse
 import os
 import mimetypes
-from utils.transforms import get_no_aug_transform
+from .utils.transforms import get_no_aug_transform
 import torch
-from models.generator import Generator
+
+device = torch.device('cuda:0')
+batch_size = 4
+trained_file = "./checkpoints/trained_netG.pth"
+
+from cartoongan.models.generator import Generator
+netG = Generator().to(device)
+netG.eval()
+netG.load_state_dict(torch.load(trained_file))
+
+from .models.generator import Generator
 import numpy as np
 import torchvision.transforms.functional as TF
 import torch.nn.functional as F
@@ -44,9 +54,9 @@ def predict_images(image_list):
 def listdir_fullpath(d):
     return [os.path.join(d, f) for f in os.listdir(d)]
 
-def divide_chunks(l, n): 
-    # looping till length l 
-    for i in range(0, len(l), n):  
+def divide_chunks(l, n):
+    # looping till length l
+    for i in range(0, len(l), n):
         yield l[i:i + n]
 
 def predict_file(input_path, output_path):
@@ -88,7 +98,7 @@ if __name__ == "__main__":
     parser.add_argument("-b", "--batch_size", type=int, default=4)
 
     input_path, output_path, user_stated_device, batch_size = vars(parser.parse_args()).values()
-    
+
     device = torch.device(user_stated_device)
     pretrained_dir = "./checkpoints/trained_netG.pth"
     netG = Generator().to(device)
