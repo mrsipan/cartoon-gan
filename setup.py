@@ -5,7 +5,7 @@ setuptools.setup(
     version='0.0.1',
     description='CartoonGAN style transfer for Hayao style.',
     author='Filip Andersson, Simon Arvidsson',
-    packages=['cartoongan'],
+    packages=setuptools.find_packages(),
     package_dir={'cartoongan': '.'},
     license='MIT'
     )
